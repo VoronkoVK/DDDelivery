@@ -1,9 +1,9 @@
 #Base Image for Build - dotnetcore SDK Image
-FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 8082
 
-FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # copy all the layers' csproj files into respective folders
