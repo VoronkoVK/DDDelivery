@@ -1,4 +1,4 @@
-﻿namespace Primitives;
+﻿namespace Ddd;
 
 public interface IUnitOfWork
 {

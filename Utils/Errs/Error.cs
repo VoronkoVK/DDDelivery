@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using CSharpFunctionalExtensions;
 
-namespace Primitives;
+namespace Errs;
 
 [ExcludeFromCodeCoverage]
 public sealed class Error : ValueObject
@@ -37,6 +37,11 @@ public sealed class Error : ValueObject
     public string Serialize()
     {
         return $"{Code}{Separator}{Message}";
+    }
+
+    public override string ToString()
+    {
+        return $"{Message}";
     }
 
     public static Error Deserialize(string serialized)

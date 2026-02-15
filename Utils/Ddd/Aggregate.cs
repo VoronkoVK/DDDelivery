@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace Primitives;
+namespace Ddd;
 
 public abstract class Aggregate<TId> : Entity<TId>, IAggregateRoot where TId : IComparable<TId>
 {

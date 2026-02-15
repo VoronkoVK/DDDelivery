@@ -1,4 +1,4 @@
-using DeliveryApp.Infrastructure;
+using DeliveryApp.Core;
 using Microsoft.Extensions.Options;
 
 namespace DeliveryApp.Api;
@@ -17,7 +17,7 @@ public class SettingsSetup : IConfigureOptions<Settings>
         options.ConnectionString = _configuration["CONNECTION_STRING"];
         options.GeoServiceGrpcHost = _configuration["GEO_SERVICE_GRPC_HOST"];
         options.MessageBrokerHost = _configuration["MESSAGE_BROKER_HOST"];
-        options.OrderStatusChangedTopic = _configuration["ORDER_STATUS_CHANGED_TOPIC"];
-        options.BasketConfirmedTopic = _configuration["BASKET_CONFIRMED_TOPIC"];
+        options.OrderEventsTopic = _configuration["ORDER_EVENTS_TOPIC"];
+        options.BasketEventsTopic = _configuration["BASKET_EVENTS_TOPIC"];
     }
 }

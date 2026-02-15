@@ -1,4 +1,4 @@
-namespace Primitives.Extensions;
+namespace Errs.Extensions;
 
 public static class StringExtension
 {
