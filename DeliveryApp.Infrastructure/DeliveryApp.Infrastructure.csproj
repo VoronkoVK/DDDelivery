@@ -41,10 +41,13 @@
 
     <ItemGroup>
       <None Remove="Proto\basket_events.proto" />
-      <Protobuf Include="Proto\basket_events.proto" />
       <None Remove="Proto\geo.proto" />
-      <Protobuf Include="Proto\geo.proto" />
       <None Remove="Proto\order_events.proto" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Protobuf Include="Proto\basket_events.proto" />
+      <Protobuf Include="Proto\geo.proto" />
       <Protobuf Include="Proto\order_events.proto" />
     </ItemGroup>
 

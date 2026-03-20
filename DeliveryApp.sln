@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryApp.Infrastructure"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4C5B5C4D-2D74-4E50-BF8B-B7CE89DDB345}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{B6FB4FD8-D312-4BC7-8C4B-29AD303A4CE0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{B6FB4FD8-D312-4BC7-8C4B-29AD303A4CE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryApp.ComponentTests", "Tests\DeliveryApp.ComponentTests\DeliveryApp.ComponentTests.csproj", "{E76362C1-D73C-42E1-A18E-305F6CF5FB0A}"
 EndProject
