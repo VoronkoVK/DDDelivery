@@ -33,8 +33,9 @@ public class Location : ValueObject
 
     public static Location CreateRandom()
     {
-        return new Location(Random.Shared.Next(MinBoundary, MaxBoundary + 1),
-            Random.Shared.Next(MinBoundary, MaxBoundary + 1));
+        var x = Random.Shared.Next(MinBoundary, MaxBoundary + 1);
+        var y = Random.Shared.Next(MinBoundary, MaxBoundary + 1);
+        return Create(x, y).Value;
     }
 
     public Result<int, Error> DistanceTo(Location target)
