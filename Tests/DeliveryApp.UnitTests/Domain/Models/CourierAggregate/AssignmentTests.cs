@@ -14,7 +14,7 @@ public class AssignmentTests
         var orderId = Guid.NewGuid();
         var volume = Volume.Create(10).Value;
         var location = Location.Create(1, 1).Value;
-        var assignment = Assignment.Create(orderId, volume, location);
+        var assignment = Assignment.Create(orderId, volume, location).Value;
         
         assignment.Should().NotBeNull();
         assignment.OrderId.Should().Be(orderId);
@@ -30,7 +30,7 @@ public class AssignmentTests
     [InlineData(6, 5)]
     public void Complete_ValidLocation_ShouldCompleteAssignment(int courierX, int courierY)
     {
-        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value);
+        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value).Value;
         var courierLocation = Location.Create(courierX, courierY).Value;
         
         var result = assignment.Complete(courierLocation);
@@ -45,7 +45,7 @@ public class AssignmentTests
     [InlineData(5, 7)]
     public void Complete_InvalidLocation_ShouldFail(int courierX, int courierY)
     {
-        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value);
+        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value).Value;
         var courierLocation = Location.Create(courierX, courierY).Value;
         
         var result = assignment.Complete(courierLocation);
@@ -57,7 +57,7 @@ public class AssignmentTests
     [Fact]
     public void Complete_DoubleComplete_ShouldFail()
     {
-        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value);
+        var assignment = Assignment.Create(Guid.NewGuid(), Volume.Create(10).Value, Location.Create(5, 5).Value).Value;
         var courierLocation = Location.Create(5, 5).Value;
         
         var completedResult1 = assignment.Complete(courierLocation);

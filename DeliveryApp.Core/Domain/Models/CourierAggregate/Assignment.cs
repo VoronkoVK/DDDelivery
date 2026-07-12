@@ -24,22 +24,40 @@ public class Assignment : Entity<Guid>
     public Location Location { get; private set; }
     public Status Status { get; private set; }
 
-    public static Assignment Create(Guid orderId, Volume volume, Location location)
+    public static Result<Assignment, Error> Create(Guid orderId, Volume volume, Location location)
     {
+        if (orderId == Guid.Empty)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(orderId));
+        }
+        
+        if (volume == null)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(volume));
+        }
+        
+        if (location == null)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(location));
+        }
+        
         return new Assignment(orderId, volume, location, Status.Assigned);
     }
 
     public Result<object, Error> Complete(Location courierLocation)
     {
-        if (Status == Status.Completed)
+        if (Status != Status.Assigned)
         {
             return Errors.AssignmentAlreadyCompleted;
         }
 
         var distance = Location.DistanceTo(courierLocation);
-        if (distance.IsFailure || distance.Value > 1)
+        if (distance.IsFailure)
         {
             return Errors.AssignmentInvalidDistance;
+        } else if (distance.Value > 1)
+        {
+            return Errors.AssignmentDistanceTooLong;
         }
 
         Status = Status.Completed;
@@ -53,5 +71,8 @@ public class Assignment : Entity<Guid>
 
         public static Error AssignmentInvalidDistance =>
             new Error($"{nameof(Assignment).ToLowerInvariant()}.invalid.distance", "Assignment invalid distance");
+        
+        public static Error AssignmentDistanceTooLong =>
+            new Error($"{nameof(Assignment).ToLowerInvariant()}.distance.too.long", "Assignment distance is too long");
     }
 }
