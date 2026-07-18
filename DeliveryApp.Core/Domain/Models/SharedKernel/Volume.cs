@@ -23,6 +23,14 @@ public class Volume : ValueObject
 
         return new Volume(value);
     }
+    
+    public static Result<Volume, Error> Create(Volume volume)
+    {
+        if (volume is null)
+            return GeneralErrors.ValueIsRequired(nameof(volume));
+
+        return Create(volume.Value);
+    }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
