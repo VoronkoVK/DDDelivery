@@ -14,7 +14,7 @@ public class CourierTests
     {
         var location = Location.Create(5, 5).Value;
 
-        var courier = new Courier("Ivan", location);
+        var courier = Courier.Create("Ivan", location).Value;
 
         courier.Name.Should().Be("Ivan");
         courier.Location.Should().Be(location);
@@ -25,7 +25,7 @@ public class CourierTests
     [Fact]
     public void CanTakeOrder_WhenOrderIsNull_ShouldFail()
     {
-        var courier = new Courier("Ivan", Location.Create(5, 5).Value);
+        var courier = Courier.Create("Ivan", Location.Create(5, 5).Value).Value;
 
         var result = courier.CanTakeOrder(null);
 
@@ -35,11 +35,10 @@ public class CourierTests
     [Theory]
     [InlineData(10, true)]
     [InlineData(20, true)]
-    [InlineData(21, false)]
     public void CanTakeOrder_WithDifferentOrderVolume_ShouldReturnExpectedResult(int volume, bool expected)
     {
-        var courier = new Courier("Ivan", Location.Create(5, 5).Value);
-        var order = Order.Create(Location.Create(1, 1).Value, Volume.Create(volume).Value).Value;
+        var courier = Courier.Create("Ivan", Location.Create(5, 5).Value).Value;
+        var order = Order.Create(Guid.NewGuid(), Location.Create(1, 1).Value, Volume.Create(volume).Value).Value;
 
         var result = courier.CanTakeOrder(order);
 
@@ -48,10 +47,22 @@ public class CourierTests
     }
 
     [Fact]
+    public void CanTakeOrder_WhenMaxVolumeExceeded_ShouldFail()
+    {
+        var courier = Courier.Create("Ivan", Location.Create(5, 5).Value).Value;
+        var order = Order.Create(Guid.NewGuid(), Location.Create(1, 1).Value, Volume.Create(21).Value).Value;
+
+        var result = courier.CanTakeOrder(order);
+
+        result.IsFailure.Should().BeTrue();
+        result.Error.Should().Be(Courier.Errors.MaxVolumeExceeded);
+    }
+
+    [Fact]
     public void TakeOrder_ValidOrder_ShouldCreateAssignment()
     {
-        var courier = new Courier("Ivan", Location.Create(5, 5).Value);
-        var order = Order.Create(Location.Create(1, 1).Value, Volume.Create(10).Value).Value;
+        var courier = Courier.Create("Ivan", Location.Create(5, 5).Value).Value;
+        var order = Order.Create(Guid.NewGuid(), Location.Create(1, 1).Value, Volume.Create(10).Value).Value;
 
         var result = courier.TakeOrder(order);
 
@@ -67,7 +78,7 @@ public class CourierTests
     [InlineData(6, 5)]
     public void Move_ValidTarget_ShouldMoveCourier(int targetX, int targetY)
     {
-        var courier = new Courier("Ivan", Location.Create(5, 5).Value);
+        var courier = Courier.Create("Ivan", Location.Create(5, 5).Value).Value;
         var target = Location.Create(targetX, targetY).Value;
 
         var result = courier.Move(target);
@@ -80,7 +91,7 @@ public class CourierTests
     public void Move_TargetIsCurrentLocation_ShouldFail()
     {
         var initialLocation = Location.Create(5, 5).Value;
-        var courier = new Courier("Ivan", initialLocation);
+        var courier = Courier.Create("Ivan", initialLocation).Value;
         var target = Location.Create(5, 5).Value;
 
         var result = courier.Move(target);
@@ -94,7 +105,7 @@ public class CourierTests
     public void Move_TargetIsTooFar_ShouldFail()
     {
         var initialLocation = Location.Create(5, 5).Value;
-        var courier = new Courier("Ivan", initialLocation);
+        var courier = Courier.Create("Ivan", initialLocation).Value;
         var target = Location.Create(7, 5).Value;
 
         var result = courier.Move(target);
@@ -107,8 +118,8 @@ public class CourierTests
     public void CompleteOrder_CourierAtOrderLocation_ShouldCompleteAssignment()
     {
         var location = Location.Create(5, 5).Value;
-        var courier = new Courier("Ivan", location);
-        var order = Order.Create(location, Volume.Create(10).Value).Value;
+        var courier = Courier.Create("Ivan", location).Value;
+        var order = Order.Create(Guid.NewGuid(), location, Volume.Create(10).Value).Value;
         courier.TakeOrder(order);
 
         var result = courier.CompleteOrder(order);
@@ -120,8 +131,8 @@ public class CourierTests
     [Fact]
     public void CompleteOrder_OrderIsNotAssigned_ShouldFail()
     {
-        var courier = new Courier("Alex", Location.Create(5, 5).Value);
-        var order = Order.Create(Location.Create(5, 5).Value, Volume.Create(10).Value).Value;
+        var courier = Courier.Create("Alex", Location.Create(5, 5).Value).Value;
+        var order = Order.Create(Guid.NewGuid(), Location.Create(5, 5).Value, Volume.Create(10).Value).Value;
 
         var result = courier.CompleteOrder(order);
 

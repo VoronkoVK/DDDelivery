@@ -15,15 +15,29 @@ public class Courier : Aggregate<Guid>
     
     private List<Assignment> _assignments = new List<Assignment>();
 
-    public Courier()
+    private Courier()
     {
     }
 
-    public Courier(string name, Location location)
+    private Courier(string name, Location location)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Location = location;
         MaxVolume = Volume.Create(20).Value;
+    }
+
+    public static Result<Courier, Error> Create(string name, Location location)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return GeneralErrors.ValueIsRequired(nameof(name));
+
+        if (location is null)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(location));
+        }
+        
+        return new Courier(name, location);
     }
     
     public Result<bool, Error> CanTakeOrder(Order order)
@@ -32,7 +46,10 @@ public class Courier : Aggregate<Guid>
             return GeneralErrors.ValueIsRequired(nameof(order));
         
         var currentVolume = _assignments.Sum(a => a.Volume.Value);
-        return currentVolume + order.Volume.Value <= MaxVolume.Value;
+        if (currentVolume + order.Volume.Value > MaxVolume.Value)
+            return Errors.MaxVolumeExceeded;
+
+        return true;
     }
 
     public UnitResult<Error> TakeOrder(Order order)
@@ -40,6 +57,11 @@ public class Courier : Aggregate<Guid>
         var canTake = CanTakeOrder(order);
         if (canTake.IsFailure)
             return canTake.Error;
+
+        if (!canTake.Value)
+        {
+            return Errors.CannotTakeOrder;
+        }
 
         var volume = Volume.Create(order.Volume.Value).Value;
         var location = Location.Create(order.Location).Value;
@@ -93,6 +115,12 @@ public class Courier : Aggregate<Guid>
 
     public class Errors
     {
+        public static Error MaxVolumeExceeded =>
+            new Error("courier.max.volume.exceeded", "Courier maximum volume exceeded");
+        
+        public static Error CannotTakeOrder =>
+            new Error("courier.cannot.take.order", "Courier cannot take order");
+
         public static Error AssignmentNotFound =>
             new Error($"{nameof(Assignment).ToLowerInvariant()}.not.found", "Assignment not found");
         

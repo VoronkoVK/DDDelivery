@@ -17,23 +17,26 @@ public class Order : Aggregate<Guid>
     {
     }
 
-    private Order(Location location, Volume volume)
+    private Order(Guid id, Location location, Volume volume)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Location = location;
         Volume = volume;
         Status = OrderStatus.Created;
     }
 
-    public static Result<Order, Error> Create(Location location, Volume volume)
+    public static Result<Order, Error> Create(Guid id, Location location, Volume volume)
     {
+        if (id == Guid.Empty)
+            return GeneralErrors.ValueIsRequired(nameof(id));
+        
         if (location is null)
             return GeneralErrors.ValueIsRequired(nameof(location));
 
         if (volume is null)
             return GeneralErrors.ValueIsRequired(nameof(volume));
         
-        return new Order(location, volume);
+        return new Order(id, location, volume);
     }
 
     public UnitResult<Error> Assign(Courier courier)
