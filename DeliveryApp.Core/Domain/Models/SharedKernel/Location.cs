@@ -30,6 +30,14 @@ public class Location : ValueObject
 
         return new Location(x, y);
     }
+    
+    public static Result<Location, Error> Create(Location location)
+    {
+        if (location is null)
+            return GeneralErrors.ValueIsRequired(nameof(location));
+
+        return Create(location.X, location.Y);
+    }
 
     public static Location CreateRandom()
     {
