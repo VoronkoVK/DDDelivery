@@ -14,11 +14,19 @@ public class OrderAssignmentService : IOrderAssignmentService
 {
     public Result<Courier, Error> AssignOrder(Order order, List<Courier> couriers)
     {
+        if (order == null)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(order));
+        }
         if (order.Status != OrderStatus.Created)
         {
             return Order.Errors.OrderAlreadyAssigned;
         }
-        
+
+        if (couriers == null)
+        {
+            return GeneralErrors.ValueIsRequired(nameof(couriers));
+        }
         if (couriers.Count == 0)
         {
             return Errors.CouriersListIsEmpty;
